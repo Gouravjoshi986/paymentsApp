@@ -14,7 +14,7 @@ const UserSchema = zod.object({
     password:zod.string().min(6)
 })
 
-router.post('./signup',async (req,res)=>{
+router.post('/signup',async (req,res)=>{
     const isUserValidated = UserSchema.safeParse(req.body);
     if (!isUserValidated) {
         return res.status(411).json({
@@ -51,6 +51,77 @@ router.post('./signup',async (req,res)=>{
         token:token
     })
 })
+
+router.post('/signin', async (req,res)=>{
+    let user = await User.findOne({ username: req.body.email });
+    if (user === null) {
+        return res.status(404).json({
+            message: "User not found.",
+        });
+    }else{
+        if(await user.validatePassword(req.body.password)){
+            const userId = user._id;
+            const token = jwt.sign({
+                userId
+            },JWT_SECRET)
+            return res.status(200).json({
+                message: "User Successfully Logged In",
+                token: token
+            });
+        }else{
+            return res.status(411).json({
+                message:"Error While Logging In"
+            });
+        }
+    }
+});
+
+const updateBody = zod.object({
+    password: zod.string().optional(),
+    firstName: zod.string().optional(),
+    lastName: zod.string().optional(),
+});
+
+router.put('/',authMiddleware,async (req,res)=>{
+    const { success } = updateBody.safeParse(req.body)
+    if (!success) {
+        res.status(411).json({
+            message: "Error while updating information"
+        })
+    }
+    await User.updateOne(req.body,{
+        id:req.userId
+    });
+
+    res.json({
+        message: "Updated successfully"
+    })
+});
+
+router.get('/bulk',async (req,res)=>{
+    const filter = req.query.filter || "";
+    const users = await User.find({
+        $or: [{
+            firstName: {
+                "$regex": filter
+            }
+        }, {
+            lastName: {
+                "$regex": filter
+            }
+        }]
+    })
+
+    res.json({
+        user:users.map(user=>({
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            _id: user._id
+        }))
+    })
+})
+
 module.exports = router;
 
 
