@@ -46,6 +46,11 @@ router.post('/signup',async (req,res)=>{
         userId
     },JWT_SECRET)
 
+    await Account.create({
+        userId,
+        balance: 1 + Math.random() * 10000
+    })
+    
     return res.status(200).json({
         message:"User Created Successfully",
         token:token
