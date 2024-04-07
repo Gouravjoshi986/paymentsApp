@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt')
-mongoose.connect("mongodb+srv://admin:Qwertyuiop12345@cluster0.e8xjrrs.mongodb.net/paymentsApp");
+require('dotenv').config();
+mongoose.connect(`${process.env.MONGODB_URI}`);
 
 const userSchema = mongoose.Schema({
     username: {
