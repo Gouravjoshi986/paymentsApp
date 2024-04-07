@@ -9,8 +9,8 @@ const router = express.Router();
 
 const UserSchema = zod.object({
     username:zod.string().email(),
-    firstname:zod.string(),
-    lastname:zod.string(),
+    firstName:zod.string(),
+    lastName:zod.string(),
     password:zod.string().min(6)
 })
 
@@ -33,8 +33,8 @@ router.post('/signup',async (req,res)=>{
 
     const newUser = new User({
         username:req.body.username,
-        firstname:req.body.firstname,
-        lastname:req.body.lastname,
+        firstName:req.body.firstName,
+        lastName:req.body.lastName,
     });
     const salt = 'Creating Hashed Password'
     const hashedPassword = await newUser.createHash(req.body.password,salt);
