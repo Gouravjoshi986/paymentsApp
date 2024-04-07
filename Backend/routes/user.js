@@ -1,6 +1,6 @@
 const express = require('express')
 const zod = require('zod')
-const {User} = require('../db')
+const {User,Account} = require('../db')
 const {authMiddleware} = require('../middleware')
 const {JWT_SECRET} = require('../config');
 const jwt = require('jsonwebtoken');
@@ -128,5 +128,3 @@ router.get('/bulk',async (req,res)=>{
 })
 
 module.exports = router;
-
-

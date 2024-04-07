@@ -33,7 +33,7 @@ const userSchema = mongoose.Schema({
 
 userSchema.methods.createHash = async function(textPassword){
     const saltRounds = 10;
-    const salt = bcrypt.genSalt(saltRounds);
+    const salt = await bcrypt.genSalt(saltRounds);
     return await bcrypt.hash(textPassword,salt);
 }
 
