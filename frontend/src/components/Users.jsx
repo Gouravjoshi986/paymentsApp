@@ -23,7 +23,7 @@ export const Users=()=>{
                 placeholder="Search Users..."
                 className="w-full px-2 py-1 border rounded border-slate-200"
                 onChange={(e)=>{
-                    setFilter(e.targe.value);
+                    setFilter(e.target.value);
                 }}
                 ></input>
             </div>
